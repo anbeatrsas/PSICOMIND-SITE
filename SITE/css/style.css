@@ -3,6 +3,12 @@
     padding: 0;
 }
 
+/* Definindo as variáveis de cores */
+:root {
+    --cor-primaria: #56A5FD;
+    --cor-secundaria: #1867BE;
+}
+
 body{
 
     font-family: "Poppins", sans-serif;
