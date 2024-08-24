@@ -141,7 +141,7 @@
     <img src="images/wave2.png" class="footer-img">
     <div class="container">
         <div class="row">
-            <div class="d-flex justify-content-between w-70">
+            <div class="d-flex justify-content-between w-100">
                 <div class="footer-box">
                     <img src="images/escritaBranco.png" alt="">
                     <p>PSICOMIND - Cuidando da sua mente, transformando vidas.  
