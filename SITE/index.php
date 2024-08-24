@@ -15,8 +15,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css">
     <script src="https://kit.fontawesome.com/1a91a6d3b2.js" crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-
 </head>
 <body>
     
@@ -108,6 +106,14 @@
         <div class="container">
             <h1 class="title text-center"> Sobre a PSICOMIND </h1>
             <div class="row">
+            <div class="col-md-12 text-center">
+                    <p >
+                    Fundada no início de 2024, a PSICOMIND surgiu com a missão de transformar a maneira como as pessoas acessam e experimentam serviços de saúde mental. Com uma visão moderna e humanizada, a PSICOMIND foi criada para atender às necessidades de uma sociedade em constante mudança, onde o bem-estar psicológico é tão essencial quanto a saúde física.
+                    </p>
+                    <p>
+                    Nosso compromisso é proporcionar um ambiente acolhedor e eficiente, onde cada cliente se sinta valorizado e cada profissional possa exercer seu papel com excelência. Na PSICOMIND, acreditamos que a tecnologia pode ser uma aliada poderosa na promoção da saúde mental, e estamos constantemente buscando novas formas de melhorar e ampliar nossos serviços.
+                    </p>
+                    </div>
                 <div class="col-md-6 about-us">
                     <p class="about-title">Por que nos escolher?</p>
                         <ul>
@@ -119,13 +125,37 @@
                             <li>Tratamentos Personalizados</li>
                         </ul>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 imagem-about">
                     <img src="images/sobreNos.png" class="img-fluid" alt="">
                 </div>
+                
             </div>
         </div>
      </section>
      
+    <!----------------------------- footer section ------>
+
+    <section class="footer">
+    <img src="images/wave2.png" class="footer-img">
+    <div class="container">
+        <div class="row">
+            <div class="d-flex justify-content-between w-70">
+                <div class="footer-box">
+                    <img src="images/escritaBranco.png" alt="">
+                    <p>PSICOMIND - Cuidando da sua mente, transformando vidas.  
+                    © 2024 PSICOMIND. Todos os direitos reservados. | Termos de Uso | Política de Privacidade</p>
+                </div>
+
+                <div class="contact text-right">
+                    <p><b>ENTRE EM CONTATO</b></p>
+                    <p><i class="fa-solid fa-phone"></i> (11) 9591-36047</p>
+                    <p><i class="fa-solid fa-envelope"></i> PSICOMIND@gmail.com</p>
+                    <p><i class="fa-solid fa-map"></i> Av. Itaquera, 8266 - Vila Carmosina, São Paulo - SP, 08295-000</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 </body>
 </html>
