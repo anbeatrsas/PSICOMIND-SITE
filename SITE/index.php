@@ -6,12 +6,126 @@
     <title>PSICOMIND - Página Inicial</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap">
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" href="images/IconSemNome.png" type="image/png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css">
+    <script src="https://kit.fontawesome.com/1a91a6d3b2.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
 </head>
 <body>
     
+    <section id="nav-bar">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="#"><img src="images/escritaBranco.png" alt=""></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alterna navegação">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">HOME</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">SERVIÇOS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">SOBRE NOS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">LOGIN</a>
+                    </li>
+                    </ul>
+                </div>
+            </nav>
+
+    </section>
+
+    <!-- banner section ---------------------------------->
+     <section id="banner">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="promo-title">Descubra o Poder da Mente com Psicomind!</p>
+                    <p>Na Psicomind, oferecemos suporte especializado para seu bem-estar mental, ajudando você a alcançar equilíbrio emocional e realizar seu potencial máximo."</p>
+                    <button id="signup">
+                        <a href="#">Agende sua consulta aqui!</a> 
+                            <span class="material-symbols-outlined">
+                                arrow_right_alt
+                            </span>
+                    </button>
+                </div>
+                    <div class="col-md-6 text-center">
+                        <img src="images/banner.png" class="img-fluid">
+                    </div> 
+            </div>
+        </div>
+        
+        <img src="images/wave1.png" class="bottom-img" alt="">
+     </section>
+
+     <!-- SESSÃO DE SERVICOS ------------------------------->
+
+     <section id="services">
+        <div class="container text-center">
+            <h2 class="title">O que a PSICOMIND oferece?</h2>
+            <div class="row text-center">
+                <div class="col-md-4 services">
+                    <img src="images/6.png" class="service-img" alt="">
+                    <h4 class="title-service">Avaliação Psicológica:</h4>
+                    <p class="text-services">Realizamos diagnósticos precisos através de testes e entrevistas, proporcionando uma compreensão profunda dos aspectos cognitivos e emocionais.</p>
+                </div>
+
+
+                <div class="col-md-4 services">
+                    <img src="images/7.png" class="service-img" alt="">
+                    <h4 class="title-service">Orientação Vocacional:</h4>
+                    <p class="text-services">Te ajudamos a identificar talentos e interesses, guiando na escolha de uma carreira alinhada com suas aptidões.
+                    </p>
+                </div>
+
+                <div class="col-md-4 services">
+                    <img src="images/8.png" class="service-img" alt="">
+                    <h4 class="title-service">Psicanálise:</h4>
+                    <p class="text-services">Exploramos o inconsciente para tratar conflitos internos e promover autoconhecimento e transformação pessoal.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+     </section>
+
+     <!-- About us----------------------------------->
+
+     <section id="about-us">
+        <div class="container">
+            <h1 class="title text-center"> Sobre a PSICOMIND </h1>
+            <div class="row">
+                <div class="col-md-6 about-us">
+                    <p class="about-title">Por que nos escolher?</p>
+                        <ul>
+                            <li>Abordagem Humanizada</li>
+                            <li>Ambiente Acolhedor e Seguro</li>
+                            <li>Suporte Emocional Contínuo</li>
+                            <li>Foco no Bem-Estar </li>
+                            <li>Confidencialidade e Ética Profissional</li>
+                            <li>Tratamentos Personalizados</li>
+                        </ul>
+                </div>
+                <div class="col-md-6">
+                    <img src="images/sobreNos.png" class="img-fluid" alt="">
+                </div>
+            </div>
+        </div>
+     </section>
+     
+
 </body>
 </html>
