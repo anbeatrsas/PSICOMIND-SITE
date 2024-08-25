@@ -1,11 +1,14 @@
 <?php 
     include "conn/conection.php";
 
-     // Consulta para obter os gêneros
-     $resultadoGeneros = $conn->query("SELECT * FROM genero");
+    // Consulta para obter os gêneros
+    $resultadoGeneros = $conn->query("SELECT * FROM genero");
 
-     // Consulta para obter tipos de telefone
-     $resultadoTelefone = $conn->query("SELECT * FROM telefone_tipo");
+    // Consulta para obter tipos de telefone
+    $resultadoTelefone = $conn->query("SELECT * FROM telefone_tipo");
+
+    // Consulta para obter tipos de endereço
+    $resultadoTipoEndereco = $conn->query("SELECT * FROM tipo_endereco");
 
     // Verifica se o formulário foi enviado
     if ($_POST) {
@@ -17,6 +20,13 @@
         $genero_id = $_POST['genero_id'];
         $telefone = $_POST['telefone'];
         $tipo_telefone = $_POST['tipo_telefone'];
+        $cep = $_POST['cep'];
+        $rua = $_POST['rua'];
+        $numero = $_POST['numero'];
+        $bairro = $_POST['bairro'];
+        $cidade = $_POST['cidade'];
+        $uf = $_POST['uf'];
+        $tipo_endereco_id = $_POST['tipo_endereco_id'];
     
         // Insere o cliente no banco de dados
         $inserindoCliente = $conn->query("INSERT INTO clientes (nome, email, senha, cpf, data_nasc, genero_id) VALUES ('$nome', '$email', '$senha', '$cpf', '$data_nasc', $genero_id)");
@@ -29,9 +39,16 @@
             $inserindoCelular = $conn->query("INSERT INTO telefone_cliente (numero, cliente_id, telefone_tipo_id) VALUES ('$telefone', $cliente_id, $tipo_telefone)");
     
             if ($inserindoCelular) {
-                echo "<script>alert('Cadastro realizado com sucesso.');</script>";
-                header('Location: cadastroEndereco.php');
-                exit();
+                // Insere o endereço relacionado ao cliente
+                $inserindoEndereco = $conn->query("INSERT INTO enderecos (cliente_id, cep, rua, numero, bairro, cidade, uf, tipo_endereco_id ) VALUES ($cliente_id, '$cep', '$rua', '$numero', '$bairro', '$cidade', '$uf', $tipo_endereco_id)");
+    
+                if ($inserindoEndereco) {
+                    echo "<script>alert('Cadastro realizado com sucesso.');</script>";
+                    header('Location: login.php');
+                    exit();
+                } else {
+                    echo "<script>alert('Erro ao cadastrar o endereço: " . $conn->error . "');</script>";
+                }
             } else {
                 echo "<script>alert('Erro ao cadastrar o telefone: " . $conn->error . "');</script>";
             }
@@ -39,19 +56,19 @@
             echo "<script>alert('Erro ao realizar o cadastro do cliente: " . $conn->error . "');</script>";
         }
     }
-    
-   
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/cadastroStyle.css">
     <link rel="icon" href="images/IconSemNome.png" type="image/png">
     <title>PSICOMIND - CADASTRO</title>
+    
 </head>
 <body>
 
@@ -66,26 +83,24 @@
                 </div>
                 <form action="cadastro.php" method="POST">
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <input type="text" id="nome" name="nome" class="form-control form-control-lg bg-light fs-6" placeholder="Nome Completo">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <input type="email" id="email" name="email" class="form-control form-control-lg bg-light fs-6" placeholder="Email">
                         </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <input type="password" id="senha" name="senha" class="form-control form-control-lg bg-light fs-6" placeholder="Senha">
                         </div>
-                        <div class="col-md-6">
-                            <input type="text" id="cpf" name="cpf" class="form-control form-control-lg bg-light fs-6" placeholder="CPF">
-                        </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <input type="text" id="cpf" name="cpf" class="form-control form-control-lg bg-light fs-6" placeholder="CPF">
+                        </div>
+                        <div class="col-md-4">
                             <input type="date" id="data_nasc" name="data_nasc" class="form-control form-control-lg bg-light fs-6">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <select id="genero_id" name="genero_id" class="form-select form-select-lg bg-light fs-6">
                                 <option selected disabled>Selecione o Gênero</option>
                                 <?php while ($genero = $resultadoGeneros->fetch_assoc()) { ?>
@@ -95,16 +110,45 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <input type="text" id="telefone" name="telefone" class="form-control form-control-lg bg-light fs-6" placeholder="Telefone">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <select id="tipo_telefone" name="tipo_telefone" class="form-select form-select-lg bg-light fs-6">
                                 <option selected disabled>Tipo de Telefone</option>
                                 <?php while($tipoTelefone = $resultadoTelefone->fetch_assoc()){?>
                                     <option value="<?php echo $tipoTelefone['id']; ?>"><?php echo $tipoTelefone['tipo'];?></option>
-                                    <?php };?>
-
+                                <?php }?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="cep" name="cep" class="form-control form-control-lg bg-light fs-6" placeholder="CEP">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <input type="text" id="rua" name="rua" class="form-control form-control-lg bg-light fs-6" placeholder="Rua">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="numero" name="numero" class="form-control form-control-lg bg-light fs-6" placeholder="Número">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="bairro" name="bairro" class="form-control form-control-lg bg-light fs-6" placeholder="Bairro">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <input type="text" id="cidade" name="cidade" class="form-control form-control-lg bg-light fs-6" placeholder="Cidade">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="uf" name="uf" class="form-control form-control-lg bg-light fs-6" placeholder="UF">
+                        </div>
+                        <div class="col-md-4">
+                        <select id="tipo_endereco_id" name="tipo_endereco_id" class="form-select form-select-lg bg-light fs-6">
+                                <option selected disabled>Tipo de Endereço</option>
+                                <?php while ($tipoEndereco = $resultadoTipoEndereco->fetch_assoc()) { ?>
+                                    <option value="<?php echo $tipoEndereco['id']; ?>"><?php echo $tipoEndereco['nome']; ?></option>
+                                <?php } ?>
                             </select>
                         </div>
                     </div>
@@ -121,3 +165,4 @@
 
 </body>
 </html>
+
