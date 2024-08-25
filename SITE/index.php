@@ -30,13 +30,13 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">HOME</a>
+                        <a class="nav-link" href="#top">HOME</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">SERVIÇOS</a>
+                        <a class="nav-link" href="#services">SERVIÇOS</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">SOBRE NOS</a>
+                        <a class="nav-link" href="#about-us">SOBRE NOS</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">LOGIN</a>
@@ -158,6 +158,12 @@
         </div>
     </div>
 </section>
+
+<!---------------------------- smootg scroll  -->
+<script src="js/smooth-scroll.js"></script>
+<script>
+	var scroll = new SmoothScroll('a[href*="#"]');
+</script>
 
 </body>
 </html>
