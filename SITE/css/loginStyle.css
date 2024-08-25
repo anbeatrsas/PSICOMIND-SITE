@@ -1,0 +1,86 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+/* Definindo as variáveis de cores */
+:root {
+    --cor-primaria: #2789f8;
+    --cor-secundaria: #2f3cee;
+}
+
+body{
+
+    font-family: "Poppins", sans-serif !important;
+    background: #ececee;
+    
+}
+
+.container{
+
+    display: flex; /* Garante que seja um contêiner flexível */
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    min-height: 100vh; /* Garante que ocupe a altura total da viewport */
+
+}
+
+.featured-image{
+
+    margin-top: 20px;
+
+}
+
+.box-area{
+
+    width: 930px;
+
+}
+
+.right-box{
+
+    padding: 40px 30px 40px 40px;
+    align-items: center;
+
+}
+
+::placeholder{
+    font-size: 16px;
+}
+
+.input-group{
+
+    padding: 10px;
+
+}
+
+.header-text{
+
+    margin-top: 20px;
+
+}
+
+.fundo{
+
+    background-image: linear-gradient(to right, var(--cor-primaria), var(--cor-secundaria));
+    color: #fff;
+    margin-top: 100px;
+
+}
+
+/* Para telas menores */
+
+@media only screen and (max-width: 768px){
+    .box-area{
+       margin: 0 10px;
+    }
+    .left-box{
+
+        visibility: hidden;
+        height: 0;
+
+    }
+    .right-box{
+       padding: 20px;
+    }
+}

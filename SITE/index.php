@@ -39,7 +39,7 @@
                         <a class="nav-link" href="#about-us">SOBRE NOS</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">LOGIN</a>
+                        <a class="nav-link" href="login.php">LOGIN</a>
                     </li>
                     </ul>
                 </div>
