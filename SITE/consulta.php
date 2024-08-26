@@ -8,7 +8,7 @@
     $profissional = $conn->query("SELECT * FROM usuarios WHERE cargo_id = 3");
 
     // Busca os dias disponíveis com base no profissional escolhido
-    $diasDisponiveis = $conn->query("SELECT dia FROM escala WHERE disponivel = 1 AND profissional_id = '$profissional_id'");
+    $diasDisponiveis = $conn->query("SELECT dia FROM escala WHERE disponivel = 1");
 
     $datasDisponiveis = [];
     if($diasDisponiveis->num_rows > 0){
@@ -29,6 +29,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/cadastroStyle.css">
     <link rel="icon" href="images/IconSemNome.png" type="image/png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
     <title>PSICOMIND - Agendamento</title>
 </head>
 <body>
@@ -63,7 +66,7 @@
                         </div>
                         <div class="col-md-6 mb-4">
                             <label style="color: var(--cor-primaria);" for="data_agendamento">Data</label>
-                            <input type="date" id="data_agendamento" name="data_agendamento" class="form-control">
+                            <input type="text" id="data_agendamento" name="data_agendamento" class="form-control">
                         </div>
                         <div class="col-md-6 mb-4 d-flex align-items-end justify-content-end">
                             <input type="submit" value="Consultar Horários" class="btn btn-primary">
@@ -87,37 +90,44 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Receba as datas disponíveis do PHP
-            const datasDisponiveis = <?php echo $datas_json; ?>;
+    document.addEventListener("DOMContentLoaded", function() {
+        // Receba as datas disponíveis do PHP
+        const datasDisponiveis = <?php echo $datas_json; ?>;
 
-            // Converta as datas para o formato YYYY-MM-DD, que é o padrão para o input date
-            const formatDate = (date) => {
-                let d = new Date(date);
-                let month = '' + (d.getMonth() + 1);
-                let day = '' + d.getDate();
-                let year = d.getFullYear();
+        // Função para formatar a data no padrão YYYY-MM-DD
+        const formatDate = (date) => {
+            let d = new Date(date);
+            let month = '' + (d.getMonth() + 1);
+            let day = '' + d.getDate();
+            let year = d.getFullYear();
 
-                if (month.length < 2) month = '0' + month;
-                if (day.length < 2) day = '0' + day;
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
 
-                return [year, month, day].join('-');
-            };
+            return [year, month, day].join('-');
+        };
 
-            // Configure o input date para permitir apenas as datas disponíveis
-            const dateInput = document.getElementById('data_agendamento');
-            const availableDates = datasDisponiveis.map(date => formatDate(date));
-            
-            dateInput.addEventListener('input', function() {
-                let selectedDate = this.value;
+        const availableDates = datasDisponiveis.map(date => formatDate(date));
 
-                // Verifique se a data selecionada está no array de datas disponíveis
-                if (!availableDates.includes(selectedDate)) {
-                    alert('A data selecionada não está disponível para agendamento.');
-                    this.value = ''; // Limpa a seleção
+        // Inicialize o Flatpickr
+        flatpickr("#data_agendamento", {
+            dateFormat: "Y-m-d",
+            disable: [
+                function(date) {
+                    // Habilite apenas as datas disponíveis
+                    return !availableDates.includes(formatDate(date));
                 }
-            });
+            ],
+            onDayCreate: function(dObj, dStr, fp, dayElem) {
+                // Destaca as datas disponíveis
+                if (availableDates.includes(dayElem.dateObj.toISOString().split('T')[0])) {
+                    dayElem.style.backgroundColor = "lightgreen";
+                    dayElem.style.color = "black";
+                }
+            }
         });
-    </script>
+    });
+</script>
+
 </body>
 </html>
