@@ -89,45 +89,72 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Receba as datas disponíveis do PHP
-        const datasDisponiveis = <?php echo $datas_json; ?>;
+        document.addEventListener("DOMContentLoaded", function() {
+            const dateInput = document.getElementById('data_agendamento');
+            const profissionalSelect = document.getElementById('profissional_id');
+            const agendamentoForm = document.getElementById('agendamento-form');
 
-        // Função para formatar a data no padrão YYYY-MM-DD
-        const formatDate = (date) => {
-            let d = new Date(date);
-            let month = '' + (d.getMonth() + 1);
-            let day = '' + d.getDate();
-            let year = d.getFullYear();
+            // Função para formatar a data no padrão YYYY-MM-DD
+            const formatDate = (date) => {
+                let d = new Date(date);
+                let month = '' + (d.getMonth() + 1);
+                let day = '' + d.getDate();
+                let year = d.getFullYear();
 
-            if (month.length < 2) month = '0' + month;
-            if (day.length < 2) day = '0' + day;
+                if (month.length < 2) month = '0' + month;
+                if (day.length < 2) day = '0' + day;
 
-            return [year, month, day].join('-');
-        };
+                return [year, month, day].join('-');
+            };
 
-        const availableDates = datasDisponiveis.map(date => formatDate(date));
+            // Inicialize o Flatpickr
+            const updateCalendar = (availableDates) => {
+                flatpickr("#data_agendamento", {
+                    dateFormat: "Y-m-d",
+                    disable: [
+                        function(date) {
+                            // Habilite apenas as datas disponíveis
+                            return !availableDates.includes(formatDate(date));
+                        }
+                    ],
+                    onDayCreate: function(dObj, dStr, fp, dayElem) {
+                        // Destaca as datas disponíveis
+                        if (availableDates.includes(dayElem.dateObj.toISOString().split('T')[0])) {
+                            dayElem.style.backgroundColor = "#2789F8";
+                            dayElem.style.color = "white";
+                        }
+                    }
+                });
+            };
 
-        // Inicialize o Flatpickr seletor de datas
-        flatpickr("#data_agendamento", {
-            dateFormat: "Y-m-d",
-            disable: [
-                function(date) {
-                    // Habilite apenas as datas disponíveis
-                    return !availableDates.includes(formatDate(date));
-                }
-            ],
-            onDayCreate: function(dObj, dStr, fp, dayElem) {
-                // Destaca as datas disponíveis
-                if (availableDates.includes(dayElem.dateObj.toISOString().split('T')[0])) {
-                    dayElem.style.backgroundColor = "#2789F8";
-                    dayElem.style.color = "white";
-                }
-            }
+            // Função para atualizar datas disponíveis quando o profissional é selecionado
+            profissionalSelect.addEventListener('change', function() {
+                const profissional_id = this.value;
+
+                // Recarrega a lista de datas disponíveis para o profissional selecionado via AJAX
+                fetch('fetch_dates.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'profissional_id=' + profissional_id
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const availableDates = data.map(date => formatDate(date));
+                    updateCalendar(availableDates);
+
+                    // Envia o formulário automaticamente após atualizar o calendário
+                    agendamentoForm.submit();
+                });
+            });
+
+            // Atualiza o calendário inicial com datas vazias
+            updateCalendar([]);
         });
-    });
-</script>
+    </script>
 
 </body>
 </html>
