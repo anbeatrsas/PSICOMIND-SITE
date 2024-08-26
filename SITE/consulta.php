@@ -8,7 +8,7 @@
     $profissional = $conn->query("SELECT * FROM usuarios WHERE cargo_id = 3");
 
     // Busca os dias disponíveis com base no profissional escolhido
-    $diasDisponiveis = $conn->query("SELECT dia FROM escala WHERE disponivel = 1");
+    $diasDisponiveis = $conn->query("SELECT dia FROM escala WHERE disponivel = 1 and profissional_id = $profissional_id");
 
     $datasDisponiveis = [];
     if($diasDisponiveis->num_rows > 0){
@@ -60,7 +60,7 @@
                             <select name="profissional_id" id="profissional_id" class="form-select form-select-lg bg-light fs-6">
                                 <option selected disabled>Selecione o profissional</option>
                                 <?php while ($profissionalLista = $profissional->fetch_assoc()) { ?>
-                                    <option value="<?php echo $profissionalLista['id']; ?>"><?php echo $profissionalLista['nome']; ?></option>
+                                    <option type="submit" value="<?php echo $profissionalLista['id']; ?>"><?php echo $profissionalLista['nome']; ?></option>
                                 <?php } ?>
                             </select>
                         </div>
@@ -109,7 +109,7 @@
 
         const availableDates = datasDisponiveis.map(date => formatDate(date));
 
-        // Inicialize o Flatpickr
+        // Inicialize o Flatpickr seletor de datas
         flatpickr("#data_agendamento", {
             dateFormat: "Y-m-d",
             disable: [
