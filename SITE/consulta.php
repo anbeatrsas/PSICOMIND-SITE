@@ -3,9 +3,12 @@
     include "admin/acesso_com.php";
 
     $profissional_id = $_POST['profissional_id'] ?? 0;
+    $dia = $_POST['data_agendamento'];
 
     $agendamento = $conn->query("SELECT * FROM tipo_agendamento");
-    $profissional = $conn->query("SELECT * FROM usuarios WHERE cargo_id = 3");
+    $profissional = $conn->query("SELECT * FROM profissionais");
+
+    $horarios = $conn->query("SELECT id, horario FROM escala WHERE dia = '$dia' and profissional_id = $profissional_id and disponivel = 1");
 
     // Busca os dias disponíveis com base no profissional escolhido
     $diasDisponiveis = $conn->query("SELECT dia FROM escala WHERE disponivel = 1 and profissional_id = $profissional_id");
@@ -60,7 +63,7 @@
                             <select name="profissional_id" id="profissional_id" class="form-select form-select-lg bg-light fs-6">
                                 <option selected disabled>Selecione o profissional</option>
                                 <?php while ($profissionalLista = $profissional->fetch_assoc()) { ?>
-                                    <option type="submit" value="<?php echo $profissionalLista['id']; ?>"><?php echo $profissionalLista['nome']; ?></option>
+                                    <option value="<?php echo $profissionalLista['id']; ?>"><?php echo $profissionalLista['nome']; ?></option>
                                 <?php } ?>
                             </select>
                         </div>
@@ -75,8 +78,10 @@
                         <div class="col-md-12 mb-4">
                             <label style="color: var(--cor-primaria);" for="horarios">Horários</label>
                             <select name="horario_id" id="horarios" class="form-select form-select-lg bg-light fs-6">
-                                <option selected disabled>Selecione o Horário</option>
-                                <!-- Preencha com os horários disponíveis após a seleção da data -->
+                            <option selected disabled>Selecione o Horário</option>
+                                <?php while ($horarioLista = $horarios->fetch_assoc()) { ?>
+                                    <option value="<?php echo $horarioLista["id"]?>"><?php echo $horarioLista['horario']; ?></option>
+                                <?php } ?>
                             </select>
                         </div>
 
