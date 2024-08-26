@@ -1,21 +1,24 @@
-<?php 
-
+<?php
     include "conn/conection.php";
     include "admin/acesso_com.php";
 
+    $profissional_id = $_POST['profissional_id'] ?? 0;
+
     $agendamento = $conn->query("SELECT * FROM tipo_agendamento");
-    
     $profissional = $conn->query("SELECT * FROM usuarios WHERE cargo_id = 3");
-    
-    if($_GET){
-        $id_form = $_GET['id']; // pegando o id via get para armazena-lo e usa-lo para preencher os campos
-    }else{
-        $id_form = 0;
-    } 
 
-    
+    // Busca os dias disponíveis com base no profissional escolhido
+    $diasDisponiveis = $conn->query("SELECT dia FROM escala WHERE disponivel = 1 AND profissional_id = '$profissional_id'");
+
+    $datasDisponiveis = [];
+    if($diasDisponiveis->num_rows > 0){
+        while($row = $diasDisponiveis->fetch_assoc()){
+            $datasDisponiveis[] = $row['dia'];
+        }
+    }
+
+    $datas_json = json_encode($datasDisponiveis);
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -26,7 +29,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/cadastroStyle.css">
     <link rel="icon" href="images/IconSemNome.png" type="image/png">
-    <title>PSICOMIND - CADASTRO</title>
+    <title>PSICOMIND - Agendamento</title>
 </head>
 <body>
 
@@ -50,43 +53,71 @@
                             </select>
                         </div>
                         <div class="col-md-6 mb-4">
-                            <label style="color: var(--cor-primaria);" for="profissional">Profissional</label>
-                            <select name="profissional_id" id="profissional" class="form-select form-select-lg bg-light fs-6">
+                            <label style="color: var(--cor-primaria);" for="profissional_id">Profissional</label>
+                            <select name="profissional_id" id="profissional_id" class="form-select form-select-lg bg-light fs-6">
                                 <option selected disabled>Selecione o profissional</option>
                                 <?php while ($profissionalLista = $profissional->fetch_assoc()) { ?>
                                     <option value="<?php echo $profissionalLista['id']; ?>"><?php echo $profissionalLista['nome']; ?></option>
-                                <?php } ?>  
+                                <?php } ?>
                             </select>
                         </div>
                         <div class="col-md-6 mb-4">
-                            <label style="color: var(--cor-primaria);" for="data">Data</label>
-                            <input type="date" id="data" name="data_agendamento" class="form-control">
+                            <label style="color: var(--cor-primaria);" for="data_agendamento">Data</label>
+                            <input type="date" id="data_agendamento" name="data_agendamento" class="form-control">
                         </div>
                         <div class="col-md-6 mb-4 d-flex align-items-end justify-content-end">
                             <input type="submit" value="Consultar Horários" class="btn btn-primary">
                         </div>
 
                         <div class="col-md-12 mb-4">
-                            <label style="color: var(--cor-primaria);" for="profissional">Horários</label>
-                            <select name="profissional_id" id="profissional" class="form-select form-select-lg bg-light fs-6">
+                            <label style="color: var(--cor-primaria);" for="horarios">Horários</label>
+                            <select name="horario_id" id="horarios" class="form-select form-select-lg bg-light fs-6">
                                 <option selected disabled>Selecione o Horário</option>
-                                <?php while ($profissionalLista = $profissional->fetch_assoc()) { ?>
-                                    <option value="<?php echo $profissionalLista['id']; ?>"><?php echo $profissionalLista['nome']; ?></option>
-                                <?php } ?>  
+                                <!-- Preencha com os horários disponíveis após a seleção da data -->
                             </select>
-                        </div>                
+                        </div>
 
                         <div class="col-md-12 mb-4 d-flex align-items-end justify-content-end">
                             <input type="submit" value="Continuar Agendamento" class="btn btn-primary">
                         </div>
-
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Receba as datas disponíveis do PHP
+            const datasDisponiveis = <?php echo $datas_json; ?>;
+
+            // Converta as datas para o formato YYYY-MM-DD, que é o padrão para o input date
+            const formatDate = (date) => {
+                let d = new Date(date);
+                let month = '' + (d.getMonth() + 1);
+                let day = '' + d.getDate();
+                let year = d.getFullYear();
+
+                if (month.length < 2) month = '0' + month;
+                if (day.length < 2) day = '0' + day;
+
+                return [year, month, day].join('-');
+            };
+
+            // Configure o input date para permitir apenas as datas disponíveis
+            const dateInput = document.getElementById('data_agendamento');
+            const availableDates = datasDisponiveis.map(date => formatDate(date));
+            
+            dateInput.addEventListener('input', function() {
+                let selectedDate = this.value;
+
+                // Verifique se a data selecionada está no array de datas disponíveis
+                if (!availableDates.includes(selectedDate)) {
+                    alert('A data selecionada não está disponível para agendamento.');
+                    this.value = ''; // Limpa a seleção
+                }
+            });
+        });
+    </script>
 </body>
 </html>
-
-
