@@ -153,7 +153,7 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <input type="submit" value="Continuar cadastro" class="btn btn-primary">
+                        <input type="submit" value="Finalizar cadastro" class="btn btn-primary">
                     </div>
                     <div class="text-center">
                         <small>Já possui uma conta? <a href="login.php">Faça login aqui!</a></small>

@@ -1,9 +1,10 @@
 <?php 
 
     include "conn/conection.php";
+    session_name('PSICOMIND');
+    session_start();
 
     // verificacao de login
-
     if($_POST){
         
         $email = $_POST['email'];
@@ -12,15 +13,6 @@
         $rowLogin = $login->fetch_assoc(); // transformando em um array
         $numRow = $login->num_rows; // contando o numero de linhas
 
-    
-
-        if(!isset($_SESSION)){
-
-            $sessaoAntiga = session_name('PSICOMIND');
-            session_start();
-            $session_name_new = session_name();                    
-
-        }
 
         if($numRow>0){
 
@@ -33,7 +25,7 @@
             $_SESSION['nome_sessao']=session_name();
 
             // redirecionando cliente ao efetuar login
-            header('location: consulta.php');
+            header('location: areaCliente.php');
             
         }else{
             echo"<script>alert('Email/CPF ou senha inválidos.')</script>";

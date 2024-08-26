@@ -39,7 +39,7 @@
                         <a class="nav-link" href="#about-us">SOBRE NOS</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="login.php">LOGIN</a>
+                        <a class="nav-link" href="areaCliente.php">AREA CLIENTE</a>
                     </li>
                     </ul>
                 </div>
@@ -56,7 +56,7 @@
                     <p class="promo-title">Descubra o Poder da Mente com Psicomind!</p>
                     <p>Na Psicomind, oferecemos suporte especializado para seu bem-estar mental, ajudando você a alcançar equilíbrio emocional e realizar seu potencial máximo."</p>
                     <button id="signup">
-                        <a href="#">Agende sua consulta aqui!</a> 
+                        <a href="login.php">Agende sua consulta aqui!</a> 
                             <span class="material-symbols-outlined">
                                 arrow_right_alt
                             </span>

@@ -1,11 +1,10 @@
 <?php 
 
     session_name('PSICOMIND');
+    session_start();
     //abrindo uma sessão
     if(!isset($_SESSION)){ // se nao tiver nenhum valor atribuido a sessão
-
         session_start();
-
     }
 
     // Seguranca digital
