@@ -121,8 +121,8 @@
             onDayCreate: function(dObj, dStr, fp, dayElem) {
                 // Destaca as datas disponíveis
                 if (availableDates.includes(dayElem.dateObj.toISOString().split('T')[0])) {
-                    dayElem.style.backgroundColor = "lightgreen";
-                    dayElem.style.color = "black";
+                    dayElem.style.backgroundColor = "#2789F8";
+                    dayElem.style.color = "white";
                 }
             }
         });
