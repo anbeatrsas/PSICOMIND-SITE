@@ -21,6 +21,18 @@ if ($diasDisponiveis->num_rows > 0) {
 }
 
 $datas_json = json_encode($datasDisponiveis);
+
+$horariosDisponiveis = [];
+if ($horarios->num_rows > 0) {
+    while ($row = $horarios->fetch_assoc()) {
+        $horariosDisponiveis[] = [
+            'id' => $row['id'],
+            'horario' => $row['horario']
+        ];
+    }
+}
+
+echo json_encode($horariosDisponiveis);
 ?>
 
 <!DOCTYPE html>
@@ -78,11 +90,8 @@ $datas_json = json_encode($datasDisponiveis);
                             <label style="color: var(--cor-primaria);" for="data_agendamento">Data</label>
                             <input type="text" id="data_agendamento" name="data_agendamento" class="form-control">
                         </div>
-                        <div class="col-md-6 mb-4 d-flex align-items-end justify-content-end">
-                            <input type="submit" value="Consultar Horários" class="btn btn-primary">
-                        </div>
 
-                        <div class="col-md-12 mb-4">
+                        <div class="col-md-6 mb-4">
                             <label style="color: var(--cor-primaria);" for="horarios">Horários</label>
                             <select name="horario_id" id="horarios" class="form-select form-select-lg bg-light fs-6">
                                 <option selected disabled>Selecione o Horário</option>
@@ -104,61 +113,77 @@ $datas_json = json_encode($datasDisponiveis);
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const dateInput = document.getElementById('data_agendamento');
-            const profissionalSelect = document.getElementById('profissional_id');
-            const agendamentoForm = document.getElementById('agendamento-form');
+    document.addEventListener("DOMContentLoaded", function () {
+        const dateInput = document.getElementById('data_agendamento');
+        const profissionalSelect = document.getElementById('profissional_id');
+        const horarioSelect = document.getElementById('horarios');
+        let selectedDate = '';
 
-            // Inicialize o Flatpickr
-            const updateCalendar = (availableDates) => {
-                flatpickr("#data_agendamento", {
-                    dateFormat: "Y-m-d",
-                    disable: [
-                        function (date) {
-                            // Formate a data para comparar como string no formato "YYYY-MM-DD"
-                            const dateStr = date.toISOString().split('T')[0];
-                            // Habilite apenas as datas disponíveis
-                            return !availableDates.includes(dateStr);
-                        }
-                    ],
-                    onDayCreate: function (dObj, dStr, fp, dayElem) {
-                        // Formate a data para comparar como string no formato "YYYY-MM-DD"
-                        const dateStr = dayElem.dateObj.toISOString().split('T')[0];
-                        // Destaca as datas disponíveis
-                        if (availableDates.includes(dateStr)) {
-                            dayElem.style.backgroundColor = "#2789F8";
-                            dayElem.style.color = "white";
-                        }
+        const updateCalendar = (availableDates) => {
+            flatpickr("#data_agendamento", {
+                dateFormat: "Y-m-d",
+                disable: [
+                    function (date) {
+                        const dateStr = date.toISOString().split('T')[0];
+                        return !availableDates.includes(dateStr);
                     }
-                });
-            };
+                ],
+                onDayCreate: function (dObj, dStr, fp, dayElem) {
+                    const dateStr = dayElem.dateObj.toISOString().split('T')[0];
+                    if (availableDates.includes(dateStr)) {
+                        dayElem.style.backgroundColor = "#2789F8";
+                        dayElem.style.color = "white";
+                    }
+                },
+                onChange: function(selectedDates, dateStr, instance) {
+                    selectedDate = dateStr;
+                    loadHorarios();
+                }
+            });
+        };
 
-            // Função para atualizar datas disponíveis quando o profissional é selecionado
-            profissionalSelect.addEventListener('change', function () {
-                const profissional_id = this.value;
+        const loadHorarios = () => {
+            const profissional_id = profissionalSelect.value;
 
-                // Recarrega a lista de datas disponíveis para o profissional selecionado via AJAX
-                fetch('fetch_dates.php', {
+            if (profissional_id && selectedDate) {
+                fetch('fetch_horarios.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    body: 'profissional_id=' + profissional_id
+                    body: 'profissional_id=' + profissional_id + '&data_agendamento=' + selectedDate
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        // Não precisa formatar as datas aqui, pois já estão no formato correto "YYYY-MM-DD"
-                        updateCalendar(data);
-
-                        // Envia o formulário automaticamente após atualizar o calendário
-                        agendamentoForm.submit();
+                .then(response => response.json())
+                .then(data => {
+                    horarioSelect.innerHTML = '<option selected disabled>Selecione o Horário</option>';
+                    data.forEach(horario => {
+                        const option = document.createElement('option');
+                        option.value = horario.id;
+                        option.textContent = horario.horario;
+                        horarioSelect.appendChild(option);
                     });
-            });
+                });
+            }
+        };
 
-            // Atualiza o calendário inicial com datas vazias
-            updateCalendar([]);
+        profissionalSelect.addEventListener('change', function () {
+            const profissional_id = this.value;
+
+            fetch('fetch_dates.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'profissional_id=' + profissional_id
+            })
+            .then(response => response.json())
+            .then(data => {
+                updateCalendar(data);
+            });
         });
 
+        updateCalendar([]);
+    });
     </script>
 
 </body>
