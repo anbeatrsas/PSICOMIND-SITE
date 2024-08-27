@@ -3,7 +3,7 @@ include "conn/conection.php";
 include "admin/acesso_com.php";
 
 $profissional_id = $_POST['profissional_id'] ?? 0;
-$dia = $_POST['data_agendamento'];
+$dia = $_POST['data_agendamento'] ?? 0;
 
 $agendamento = $conn->query("SELECT * FROM tipo_agendamento");
 $profissional = $conn->query("SELECT * FROM profissionais WHERE cargo_id = 3");
