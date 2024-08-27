@@ -40,7 +40,7 @@ if($_POST){
 
     $inserindoAgendamento = $conn->query("call sp_agendamentos_insert ($profissional_id, $cliente_id, $cliente_id, $escala_id, $tipoAgendamento,1)");
 
-    $baixa = $conn->query("UPDATE escala SET disponivel = 0 WHERE id = $escala_id");
+    
 
     if($inserindoAgendamento || $baixa){
         header('location: consultaConfirma.php');
@@ -50,7 +50,7 @@ if($_POST){
     
 
 }
-
+$baixa = $conn->query("UPDATE escala SET disponivel = 0 WHERE id = $escala_id");
 ?>
 
 <!DOCTYPE html>
