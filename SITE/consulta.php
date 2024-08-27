@@ -32,7 +32,6 @@ if ($horarios->num_rows > 0) {
     }
 }
 
-echo json_encode($horariosDisponiveis);
 ?>
 
 <!DOCTYPE html>
