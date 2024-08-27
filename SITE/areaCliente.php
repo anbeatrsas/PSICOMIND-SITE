@@ -42,7 +42,7 @@
                         </button>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="listaConsultas.php">CONSULTAS</a>
+                        <a class="nav-link" href="minhaConsulta.php">CONSULTAS</a>
                     </li>
                     <li class="nav-item">
                          <a class="nav-link" href="admin/logout.php">

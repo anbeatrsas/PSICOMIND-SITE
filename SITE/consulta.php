@@ -7,6 +7,7 @@ $dia = $_POST['data_agendamento'] ?? 0;
 $cliente_id = $_SESSION['cliente_id'] ?? 0;
 $escala_id = $_POST['horario_id'] ?? 0;
 $tipoAgendamento = $_POST['tipo_agendamento'] ?? 0;
+$horario = $_POST['horario'] ?? 0;
 
 
 $agendamento = $conn->query("SELECT * FROM tipo_agendamento");
@@ -37,20 +38,31 @@ if ($horarios->num_rows > 0) {
 }
 
 if($_POST){
-
-    $inserindoAgendamento = $conn->query("call sp_agendamentos_insert ($profissional_id, $cliente_id, $cliente_id, $escala_id, $tipoAgendamento,1)");
-
+    if ($_POST) {
+        // Executa a chamada do procedimento armazenado
+        $inserindoAgendamento = $conn->query("CALL sp_agendamentos_insert($profissional_id, $cliente_id, $cliente_id, $escala_id, $tipoAgendamento, 1)");
     
-
-    if($inserindoAgendamento || $baixa){
-        header('location: consultaConfirma.php');
-    }else{
-        echo"<script>alert('Erro ao efetuar agendamento.')</script>";
+        // Processa todos os resultados do CALL
+        while ($conn->more_results()) {
+            $conn->next_result();
+        }
+    
+        if ($inserindoAgendamento) {
+            // Atualiza a disponibilidade
+            $baixa = $conn->query("UPDATE escala SET disponivel = 0 WHERE id = $escala_id");
+    
+            if ($baixa) {
+                header('location: consultaConfirma.php');
+                exit; // Garante que o script PHP pare após o redirecionamento
+            } else {
+                echo "<script>alert('Erro ao atualizar disponibilidade.')</script>";
+            }
+        } else {
+            echo "<script>alert('Erro ao efetuar agendamento.')</script>";
+        }
     }
-    
-
 }
-$baixa = $conn->query("UPDATE escala SET disponivel = 0 WHERE id = $escala_id");
+
 ?>
 
 <!DOCTYPE html>
