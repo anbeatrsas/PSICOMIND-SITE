@@ -5,7 +5,7 @@
     $profissional_id = $_POST['profissional_id'] ?? 0;
 
     $agendamento = $conn->query("SELECT * FROM tipo_agendamento");
-    $profissional = $conn->query("SELECT * FROM usuarios WHERE cargo_id = 3");
+    $profissional = $conn->query("SELECT * FROM profissionais WHERE cargo_id = 3");
 
     // Busca os dias disponíveis com base no profissional escolhido
     $diasDisponiveis = $conn->query("SELECT dia FROM escala WHERE disponivel = 1 and profissional_id = $profissional_id");
