@@ -11,6 +11,8 @@
     // Busca os dias disponíveis com base no profissional escolhido
     $diasDisponiveis = $conn->query("SELECT dia FROM escala WHERE disponivel = 1 and profissional_id = $profissional_id");
 
+    $horarios = $conn->query("SELECT id, horario FROM escala WHERE dia = '$dia' AND disponivel = 1 AND profissional_id = $profissional_id ");
+
     $datasDisponiveis = [];
     if($diasDisponiveis->num_rows > 0){
         while($row = $diasDisponiveis->fetch_assoc()){
