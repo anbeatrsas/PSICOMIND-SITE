@@ -3,7 +3,11 @@ include "conn/conection.php";
 include "admin/acesso_com.php";
 
 $profissional_id = $_POST['profissional_id'] ?? 0;
-$dia = $_POST['data_agendamento'];
+$dia = $_POST['data_agendamento'] ?? 0;
+$cliente_id = $_SESSION['cliente_id'] ?? 0;
+$escala_id = $_POST['horario_id'] ?? 0;
+$tipoAgendamento = $_POST['tipo_agendamento'] ?? 0;
+
 
 $agendamento = $conn->query("SELECT * FROM tipo_agendamento");
 $profissional = $conn->query("SELECT * FROM profissionais WHERE cargo_id = 3");
@@ -32,11 +36,26 @@ if ($horarios->num_rows > 0) {
     }
 }
 
+if($_POST){
+
+    $inserindoAgendamento = $conn->query("call sp_agendamentos_insert ($profissional_id, $cliente_id, $cliente_id, $escala_id, $tipoAgendamento,1)");
+
+    $baixa = $conn->query("UPDATE escala SET disponivel = 0 WHERE id = $escala_id");
+
+    if($inserindoAgendamento || $baixa){
+        header('location: consultaConfirma.php');
+    }else{
+        echo"<script>alert('Erro ao efetuar agendamento.')</script>";
+    }
+    
+
+}
+
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
-
+ 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -46,14 +65,14 @@ if ($horarios->num_rows > 0) {
     <link rel="icon" href="images/IconSemNome.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
+ 
     <title>PSICOMIND - Agendamento</title>
 </head>
-
+ 
 <body>
-
+ 
     <?php include "menu.php" ?>
-
+ 
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="row border rounded-5 p-4 bg-white shadow box-area">
             <div class="col-md-12 right-box">
@@ -65,7 +84,7 @@ if ($horarios->num_rows > 0) {
                         <div class="col-md-6 mb-4">
                             <label style="color: var(--cor-primaria);" for="tipo_agendamento">Tipo de
                                 Agendamento</label>
-                            <select id="tipo_agendamento" name="tipo_agendamento_id"
+                            <select id="tipo_agendamento" name="tipo_agendamento"
                                 class="form-select form-select-lg bg-light fs-6">
                                 <option selected disabled>Selecione o tipo de consulta</option>
                                 <?php while ($tipoAgendamento = $agendamento->fetch_assoc()) { ?>
@@ -89,7 +108,7 @@ if ($horarios->num_rows > 0) {
                             <label style="color: var(--cor-primaria);" for="data_agendamento">Data</label>
                             <input type="text" id="data_agendamento" name="data_agendamento" class="form-control">
                         </div>
-
+ 
                         <div class="col-md-6 mb-4">
                             <label style="color: var(--cor-primaria);" for="horarios">Horários</label>
                             <select name="horario_id" id="horarios" class="form-select form-select-lg bg-light fs-6">
@@ -100,7 +119,7 @@ if ($horarios->num_rows > 0) {
                                 <?php } ?>
                             </select>
                         </div>
-
+ 
                         <div class="col-md-12 mb-4 d-flex align-items-end justify-content-end">
                             <input type="submit" value="Continuar Agendamento" class="btn btn-primary">
                         </div>
@@ -109,7 +128,7 @@ if ($horarios->num_rows > 0) {
             </div>
         </div>
     </div>
-
+ 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -117,7 +136,7 @@ if ($horarios->num_rows > 0) {
         const profissionalSelect = document.getElementById('profissional_id');
         const horarioSelect = document.getElementById('horarios');
         let selectedDate = '';
-
+ 
         const updateCalendar = (availableDates) => {
             flatpickr("#data_agendamento", {
                 dateFormat: "Y-m-d",
@@ -140,10 +159,10 @@ if ($horarios->num_rows > 0) {
                 }
             });
         };
-
+ 
         const loadHorarios = () => {
             const profissional_id = profissionalSelect.value;
-
+ 
             if (profissional_id && selectedDate) {
                 fetch('fetch_horarios.php', {
                     method: 'POST',
@@ -164,10 +183,10 @@ if ($horarios->num_rows > 0) {
                 });
             }
         };
-
+ 
         profissionalSelect.addEventListener('change', function () {
             const profissional_id = this.value;
-
+ 
             fetch('fetch_dates.php', {
                 method: 'POST',
                 headers: {
@@ -180,11 +199,11 @@ if ($horarios->num_rows > 0) {
                 updateCalendar(data);
             });
         });
-
+ 
         updateCalendar([]);
     });
     </script>
-
+ 
 </body>
-
+ 
 </html>
