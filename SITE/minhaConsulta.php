@@ -6,7 +6,7 @@ include "admin/acesso_com.php";
 $cliente_id = $_SESSION['cliente_id'] ?? 0;
 
 // Buscando as consultas do usuário
-$consultas = $conn->query("select * from vw_consulta_informacoes_cliente");
+$consultas = $conn->query("SELECT * FROM vw_consulta_informacoes_cliente WHERE cliente_id = $cliente_id");
 
 ?>
 <!DOCTYPE html>
