@@ -12,6 +12,9 @@ $horario = $_POST['horario'] ?? 0;
 $agendamento = $conn->query("SELECT * FROM tipo_agendamento");
 $profissional = $conn->query("SELECT * FROM profissionais WHERE cargo_id = 3");
 
+$preco = $conn->query("SELECT * FROM preco_consulta WHERE id = $tipoAgendamento");
+$tipoPreco = $preco->fetch_assoc();
+
 // Busca os dias disponíveis com base no profissional escolhido
 $diasDisponiveis = $conn->query("SELECT dia FROM escala WHERE disponivel = 1 and profissional_id = $profissional_id");
 
@@ -103,14 +106,16 @@ if($_POST){
                         <div class="col-md-6 mb-4">
                             <label style="color: var(--cor-primaria);" for="tipo_agendamento">Tipo de
                                 Agendamento</label>
-                            <select id="tipo_agendamento" name="tipo_agendamento"
-                                class="form-select form-select-lg bg-light fs-6">
-                                <option selected disabled>Selecione o tipo de consulta</option>
-                                <?php while ($tipoAgendamento = $agendamento->fetch_assoc()) { ?>
-                                    <option value="<?php echo $tipoAgendamento['id']; ?>">
-                                        <?php echo $tipoAgendamento['tipo_agendamento']; ?></option>
-                                <?php } ?>
-                            </select>
+                                <select id="tipo_agendamento" name="tipo_agendamento" class="form-select form-select-lg bg-light fs-6">
+                                    <option selected disabled>Selecione o tipo de consulta</option>
+                                    <?php 
+                                    $agendamento = $conn->query("SELECT t.id, t.tipo_agendamento, p.preco FROM tipo_agendamento t JOIN preco_consulta p ON t.id = p.id");
+                                    while ($tipoAgendamento = $agendamento->fetch_assoc()) { ?>
+                                        <option value="<?php echo $tipoAgendamento['id']; ?>" data-preco="<?php echo $tipoAgendamento['preco']; ?>">
+                                            <?php echo $tipoAgendamento['tipo_agendamento']; ?>
+                                        </option>
+                                    <?php } ?>
+                                </select>
                         </div>
                         <div class="col-md-6 mb-4">
                             <label style="color: var(--cor-primaria);" for="profissional_id">Profissional</label>
@@ -161,6 +166,7 @@ if($_POST){
                     <p id="modalProfissional"></p>
                     <p id="modalData"></p>
                     <p id="modalHorario"></p>
+                    <p id="modalPreco"></p>
                     <p>Deseja confirmar sua consulta?</p>
                 </div>
                 <div class="modal-footer">
@@ -242,16 +248,22 @@ if($_POST){
             });
 
             document.querySelector('.btn-primary').addEventListener('click', function() {
-                const tipoAgendamento = document.getElementById('tipo_agendamento').selectedOptions[0].text;
-                const profissional = document.getElementById('profissional_id').selectedOptions[0].text;
-                const data = document.getElementById('data_agendamento').value;
-                const horario = document.getElementById('horarios').selectedOptions[0].text;
+        const tipoAgendamentoSelect = document.getElementById('tipo_agendamento');
+        const tipoAgendamento = tipoAgendamentoSelect.selectedOptions[0].text;
+        const profissional = document.getElementById('profissional_id').selectedOptions[0].text;
+        const data = document.getElementById('data_agendamento').value;
+        const horario = document.getElementById('horarios').selectedOptions[0].text;
 
-                document.getElementById('modalTipoAgendamento').innerText = 'Tipo de Agendamento: ' + tipoAgendamento;
-                document.getElementById('modalProfissional').innerText = 'Profissional: ' + profissional;
-                document.getElementById('modalData').innerText = 'Data: ' + data;
-                document.getElementById('modalHorario').innerText = 'Horário: ' + horario;
-            });
+        // Obtém o preço do tipo de agendamento selecionado
+        const preco = tipoAgendamentoSelect.selectedOptions[0].getAttribute('data-preco');
+
+        // Atualiza o modal com as informações
+        document.getElementById('modalTipoAgendamento').innerText = 'Tipo de Agendamento: ' + tipoAgendamento;
+        document.getElementById('modalProfissional').innerText = 'Profissional: ' + profissional;
+        document.getElementById('modalData').innerText = 'Data: ' + data;
+        document.getElementById('modalHorario').innerText = 'Horário: ' + horario;
+        document.getElementById('modalPreco').innerText = 'Preço: ' + preco;
+    });
 
             document.getElementById('confirmButton').addEventListener('click', function() {
                 document.getElementById('agendamentoForm').submit();
