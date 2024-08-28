@@ -6,7 +6,7 @@ include "admin/acesso_com.php";
 $cliente_id = $_SESSION['cliente_id'] ?? 0;
 
 // Buscando as consultas do usuário
-$consultas = $conn->query("select * from consultas");
+$consultas = $conn->query("select * from vw_consulta_informacoes_cliente");
 
 ?>
 <!DOCTYPE html>
@@ -73,12 +73,13 @@ $consultas = $conn->query("select * from consultas");
                     <?php if ($consultas->num_rows > 0) { ?>
                         <?php while ($consulta = $consultas->fetch_assoc()) { ?>
                             <tr>
-                                <td><?php echo $consulta['id']; ?></td>
-                                <td><?php echo $consulta['profissional']; ?></td>
-                                <td><?php echo $consulta['tipo_agendamento']; ?></td>
-                                <td><?php echo date('d/m/Y', strtotime($consulta['dia'])); ?></td>
-                                <td><?php echo $consulta['horario']; ?></td>
-                                <td><?php echo $consulta['status'] == 1 ? 'Agendado' : 'Concluído'; ?></td>
+                                <td><?php echo $consulta['nome_cliente']; ?></td>
+                                <td><?php echo $consulta['nome_profissional']; ?></td>
+                                <td><?php echo $consulta['dia_escala']?></td>
+                                <td><?php echo $consulta['horario_escala']?></td>
+                                <td><?php echo $consulta['status_consulta']?></td>
+                                <td><?php echo $consulta['tipo_agendamento']?></td>
+                                <td><?php echo $consulta['preco']?></td>
                             </tr>
                         <?php } ?>
                     <?php } else { ?>
