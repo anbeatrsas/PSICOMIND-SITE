@@ -9,7 +9,6 @@ $escala_id = $_POST['horario_id'] ?? 0;
 $tipoAgendamento = $_POST['tipo_agendamento'] ?? 0;
 $horario = $_POST['horario'] ?? 0;
 
-
 $agendamento = $conn->query("SELECT * FROM tipo_agendamento");
 $profissional = $conn->query("SELECT * FROM profissionais WHERE cargo_id = 3");
 
@@ -67,7 +66,7 @@ if($_POST){
 
 <!DOCTYPE html>
 <html lang="pt-BR">
- 
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -77,21 +76,21 @@ if($_POST){
     <link rel="icon" href="images/IconSemNome.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
- 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <title>PSICOMIND - Agendamento</title>
 </head>
- 
+
 <body>
- 
+
     <?php include "menu.php" ?>
- 
+
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="row border rounded-5 p-4 bg-white shadow box-area">
             <div class="col-md-12 right-box">
                 <div class="header-text mb-4">
                     <h1>Agendamento de Consulta</h1>
                 </div>
-                <form action="consulta.php" method="POST">
+                <form id="agendamentoForm" method="POST">
                     <div class="row mb-3">
                         <div class="col-md-6 mb-4">
                             <label style="color: var(--cor-primaria);" for="tipo_agendamento">Tipo de
@@ -120,7 +119,7 @@ if($_POST){
                             <label style="color: var(--cor-primaria);" for="data_agendamento">Data</label>
                             <input type="text" id="data_agendamento" name="data_agendamento" class="form-control">
                         </div>
- 
+
                         <div class="col-md-6 mb-4">
                             <label style="color: var(--cor-primaria);" for="horarios">Horários</label>
                             <select name="horario_id" id="horarios" class="form-select form-select-lg bg-light fs-6">
@@ -131,91 +130,129 @@ if($_POST){
                                 <?php } ?>
                             </select>
                         </div>
- 
+
                         <div class="col-md-12 mb-4 d-flex align-items-end justify-content-end">
-                            <input type="submit" value="Continuar Agendamento" class="btn btn-primary">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal">Continuar Agendamento</button>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
- 
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <!-- Modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Confirmação de Consulta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalTipoAgendamento"></p>
+                    <p id="modalProfissional"></p>
+                    <p id="modalData"></p>
+                    <p id="modalHorario"></p>
+                    <p>Deseja confirmar sua consulta?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmButton">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const dateInput = document.getElementById('data_agendamento');
-        const profissionalSelect = document.getElementById('profissional_id');
-        const horarioSelect = document.getElementById('horarios');
-        let selectedDate = '';
- 
-        const updateCalendar = (availableDates) => {
-            flatpickr("#data_agendamento", {
-                dateFormat: "Y-m-d",
-                disable: [
-                    function (date) {
-                        const dateStr = date.toISOString().split('T')[0];
-                        return !availableDates.includes(dateStr);
+        document.addEventListener("DOMContentLoaded", function () {
+            const dateInput = document.getElementById('data_agendamento');
+            const profissionalSelect = document.getElementById('profissional_id');
+            const horarioSelect = document.getElementById('horarios');
+            let selectedDate = '';
+
+            const updateCalendar = (availableDates) => {
+                flatpickr("#data_agendamento", {
+                    dateFormat: "Y-m-d",
+                    disable: [
+                        function (date) {
+                            const dateStr = date.toISOString().split('T')[0];
+                            return !availableDates.includes(dateStr);
+                        }
+                    ],
+                    onDayCreate: function (dObj, dStr, fp, dayElem) {
+                        const dateStr = dayElem.dateObj.toISOString().split('T')[0];
+                        if (availableDates.includes(dateStr)) {
+                            dayElem.style.backgroundColor = "#2789F8";
+                            dayElem.style.color = "white";
+                        }
+                    },
+                    onChange: function(selectedDates, dateStr, instance) {
+                        selectedDate = dateStr;
+                        loadHorarios();
                     }
-                ],
-                onDayCreate: function (dObj, dStr, fp, dayElem) {
-                    const dateStr = dayElem.dateObj.toISOString().split('T')[0];
-                    if (availableDates.includes(dateStr)) {
-                        dayElem.style.backgroundColor = "#2789F8";
-                        dayElem.style.color = "white";
-                    }
-                },
-                onChange: function(selectedDates, dateStr, instance) {
-                    selectedDate = dateStr;
-                    loadHorarios();
+                });
+            };
+
+            const loadHorarios = () => {
+                const profissional_id = profissionalSelect.value;
+
+                if (profissional_id && selectedDate) {
+                    fetch('fetch_horarios.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: 'profissional_id=' + profissional_id + '&data_agendamento=' + selectedDate
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        horarioSelect.innerHTML = '<option selected disabled>Selecione o Horário</option>';
+                        data.forEach(horario => {
+                            const option = document.createElement('option');
+                            option.value = horario.id;
+                            option.textContent = horario.horario;
+                            horarioSelect.appendChild(option);
+                        });
+                    });
                 }
-            });
-        };
- 
-        const loadHorarios = () => {
-            const profissional_id = profissionalSelect.value;
- 
-            if (profissional_id && selectedDate) {
-                fetch('fetch_horarios.php', {
+            };
+
+            profissionalSelect.addEventListener('change', function () {
+                const profissional_id = this.value;
+
+                fetch('fetch_dates.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    body: 'profissional_id=' + profissional_id + '&data_agendamento=' + selectedDate
+                    body: 'profissional_id=' + profissional_id
                 })
                 .then(response => response.json())
                 .then(data => {
-                    horarioSelect.innerHTML = '<option selected disabled>Selecione o Horário</option>';
-                    data.forEach(horario => {
-                        const option = document.createElement('option');
-                        option.value = horario.id;
-                        option.textContent = horario.horario;
-                        horarioSelect.appendChild(option);
-                    });
+                    updateCalendar(data);
                 });
-            }
-        };
- 
-        profissionalSelect.addEventListener('change', function () {
-            const profissional_id = this.value;
- 
-            fetch('fetch_dates.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: 'profissional_id=' + profissional_id
-            })
-            .then(response => response.json())
-            .then(data => {
-                updateCalendar(data);
             });
+
+            document.querySelector('.btn-primary').addEventListener('click', function() {
+                const tipoAgendamento = document.getElementById('tipo_agendamento').selectedOptions[0].text;
+                const profissional = document.getElementById('profissional_id').selectedOptions[0].text;
+                const data = document.getElementById('data_agendamento').value;
+                const horario = document.getElementById('horarios').selectedOptions[0].text;
+
+                document.getElementById('modalTipoAgendamento').innerText = 'Tipo de Agendamento: ' + tipoAgendamento;
+                document.getElementById('modalProfissional').innerText = 'Profissional: ' + profissional;
+                document.getElementById('modalData').innerText = 'Data: ' + data;
+                document.getElementById('modalHorario').innerText = 'Horário: ' + horario;
+            });
+
+            document.getElementById('confirmButton').addEventListener('click', function() {
+                document.getElementById('agendamentoForm').submit();
+            });
+
+            updateCalendar([]);
         });
- 
-        updateCalendar([]);
-    });
     </script>
- 
+
 </body>
- 
+
 </html>
