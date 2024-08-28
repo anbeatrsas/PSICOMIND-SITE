@@ -40,7 +40,7 @@ if($_POST){
     if ($_POST) {
         // Executa a chamada do procedimento armazenado
         $inserindoAgendamento = $conn->query("CALL sp_agendamentos_insert($profissional_id, $cliente_id, $cliente_id, $escala_id, $tipoAgendamento, 1)");
-    
+
         // Processa todos os resultados do CALL
         while ($conn->more_results()) {
             $conn->next_result();
@@ -51,8 +51,16 @@ if($_POST){
             $baixa = $conn->query("UPDATE escala SET disponivel = 0 WHERE id = $escala_id");
     
             if ($baixa) {
-                header('location: consultaConfirma.php');
-                exit; // Garante que o script PHP pare após o redirecionamento
+
+                $agendamento_id = $conn->lastInsertId();
+                $consultaInserir = $conn->query("INSERT INTO consultas VALUES (0, $agendamento_id, 'a', 1, 'Agendada')");
+
+                if($consultaInserir){
+                    header('location: minhaConsulta.php');
+                    exit; // Garante que o script PHP pare após o redirecionamento
+                }else{
+                    echo "<script>alert('Erro ao agendar consulta.')</script>";
+                }  
             } else {
                 echo "<script>alert('Erro ao atualizar disponibilidade.')</script>";
             }
@@ -157,7 +165,7 @@ if($_POST){
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="confirmButton">Confirmar</button>
+                    <button type="submit" class="btn btn-primary" id="confirmButton">Confirmar</button>
                 </div>
             </div>
         </div>
