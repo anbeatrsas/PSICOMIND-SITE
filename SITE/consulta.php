@@ -39,7 +39,8 @@ if ($horarios->num_rows > 0) {
 if($_POST){
     if ($_POST) {
         // Executa a chamada do procedimento armazenado
-        $inserindoAgendamento = $conn->query("CALL sp_agendamentos_insert($profissional_id, $cliente_id, $cliente_id, $escala_id, $tipoAgendamento, 1)");
+        $inserindoAgendamento = $conn->query("INSERT INTO agendamentos VALUES (0,$profissional_id, $cliente_id, $cliente_id, $escala_id, $tipoAgendamento, 'A')");               
+        $agendamento_id = $conn->insert_id;
 
         // Processa todos os resultados do CALL
         while ($conn->more_results()) {
@@ -51,10 +52,9 @@ if($_POST){
             $baixa = $conn->query("UPDATE escala SET disponivel = 0 WHERE id = $escala_id");
     
             if ($baixa) {
-
-                $agendamento_id = $conn->lastInsertId();
+               
                 $consultaInserir = $conn->query("INSERT INTO consultas VALUES (0, $agendamento_id, 'a', 1, 'Agendada')");
-
+                
                 if($consultaInserir){
                     header('location: minhaConsulta.php');
                     exit; // Garante que o script PHP pare após o redirecionamento
