@@ -53,8 +53,8 @@ if($_POST){
     
             if ($baixa) {
                
-                $consultaInserir = $conn->query("INSERT INTO consultas VALUES (0, $agendamento_id, 'a', 1, 'Agendada')");
-                
+                $consultaInserir = $conn->query("INSERT INTO consultas VALUES (0, $agendamento_id, '', 1, 'Agendada')");
+
                 if($consultaInserir){
                     header('location: minhaConsulta.php');
                     exit; // Garante que o script PHP pare após o redirecionamento
