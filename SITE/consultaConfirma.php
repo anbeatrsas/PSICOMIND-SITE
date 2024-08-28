@@ -22,7 +22,8 @@
         <div class="row border rounded-5 p-4 bg-white shadow box-area">
             <div class="col-md-12 right-box">
                 <div class="header-text mb-4">
-                    <h1>Agendamento de Consulta</h1>
+                    <h1>Confirmação de Consulta</h1>
+                    <p class="align-items-center">Deseja confirmar o agendamento da sua consulta?</p>
                 </div>
                 <form action="consulta.php" method="POST">
                     <div class="row mb-3">
