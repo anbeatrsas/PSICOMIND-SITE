@@ -95,7 +95,7 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <input type="text" id="cpf" name="cpf" required class="form-control form-control-lg bg-light fs-6" placeholder="CPF">
+                            <input type="text" id="cpf" name="cpf" required maxlength="11" class="form-control form-control-lg bg-light fs-6" placeholder="CPF">
                         </div>
                         <div class="col-md-4">
                             <input type="date" id="data_nasc" required name="data_nasc" class="form-control form-control-lg bg-light fs-6">
@@ -111,7 +111,7 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <input type="text" id="telefone" name="telefone" required class="form-control form-control-lg bg-light fs-6" placeholder="Telefone">
+                            <input type="text" id="telefone" name="telefone" maxlength="11" required class="form-control form-control-lg bg-light fs-6" placeholder="Telefone">
                         </div>
                         <div class="col-md-4">
                             <select id="tipo_telefone" name="tipo_telefone" required class="form-select form-select-lg bg-light fs-6">
