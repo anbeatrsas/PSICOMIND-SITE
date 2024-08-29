@@ -30,6 +30,9 @@
     
         // Insere o cliente no banco de dados
         $inserindoCliente = $conn->query("INSERT INTO clientes (nome, email, senha, cpf, data_nasc, genero_id) VALUES ('$nome', '$email', '$senha', '$cpf', '$data_nasc', $genero_id)");
+
+        // Inserindo User
+        $inserindoUser = $conn->query("INSERT INTO usuarios VALUES (0, 4, '$nome', '$email', '$senha', 1)");
     
         if ($inserindoCliente) {
             // Recupera o último ID inserido

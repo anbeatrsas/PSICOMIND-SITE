@@ -23,6 +23,7 @@ $precoAgendamento = $tipoPreco['preco'] ?? 0;
 $prof = $conn->query("SELECT * FROM profissionais WHERE id = $profissional_id");
 $arrayProf = $prof->fetch_assoc();
 $profissionalName = $arrayProf['nome'] ?? 0;
+$profissionalEmail = $arrayProf['email'] ?? 0;
 
 $hour = $conn->query("SELECT * FROM escala WHERE id = $escala_id");
 $arrayEscala = $hour->fetch_assoc();
@@ -31,6 +32,7 @@ $horarioAgendamento = $arrayEscala['horario'] ?? 0;
 $tipo = $conn->query("SELECT * FROM tipo_agendamento WHERE id = $tipoAgendamento");
 $arrayTipo = $tipo->fetch_assoc();
 $tipoDeAgendamento = $arrayTipo['tipo_agendamento'] ?? 0;
+
 
 // -----------------------------------------------------------------------------------
 
@@ -74,33 +76,47 @@ if($_POST){
             $baixa = $conn->query("UPDATE escala SET disponivel = 0 WHERE id = $escala_id");
     
             if ($baixa) {
-               
                 $consultaInserir = $conn->query("INSERT INTO consultas VALUES (0, $agendamento_id, '', 1, 'Agendada')");
-
+                
                 if($consultaInserir){  
 
-                $mensagem = '
-                <h1 style="color: #2789f8; text-align: center;">Confirmação de Agendamento</h1>
-                <p>Olá, '. $_SESSION['nome_cliente'] .'</p>
-                <p>Seu agendamento foi confirmado com as seguintes informações:</p>
-                <p>Horário: ' . $horarioAgendamento . '</p>
-                <p>Data: ' . $dia .'</p>
-                <p>Preço: ' . $precoAgendamento .  '</p>
-                <p>Tipo: ' . $tipoDeAgendamento .'</p>
-                <p>Profissional: ' . $profissionalName . '</p>
-                <p>Aguardamos você no dia e horário agendado.</p>
-                <p>Obrigado e até breve!</p>
-                <p>Atenciosamente,</p>
-                <p><strong>PSICOMIND</strong></p>
-                ';
+                    $mensagemCliente = '
+                    <h1 style="color: #2789f8; text-align: center;">Confirmação de Agendamento</h1>
+                    <p>Olá, '. $_SESSION['nome_cliente'] .'</p>
+                    <p>Seu agendamento foi confirmado com as seguintes informações:</p>
+                    <p>Horário: ' . $horarioAgendamento . '</p>
+                    <p>Data: ' . $dia .'</p>
+                    <p>Preço: R$ ' . $precoAgendamento .  '</p>
+                    <p>Tipo: ' . $tipoDeAgendamento .'</p>
+                    <p>Profissional: ' . $profissionalName . '</p>
+                    <p>Aguardamos você no dia e horário agendado.</p>
+                    <p>Obrigado e até breve!</p>
+                    <p>Atenciosamente,</p>
+                    <p><strong>PSICOMIND</strong></p>
+                    ';
+
+                    $mensagemProfissional = '
+                    <h1 style="color: #2789f8; text-align: center;">Novo Agendamento</h1>
+                    <p>Olá, '. $profissionalName .'</p>
+                    <p>Foi efetuado um agendamento com as seguintes informações:</p>
+                    <p>Horário: ' . $horarioAgendamento . '</p>
+                    <p>Data: ' . $dia .'</p>
+                    <p>Preço: R$ ' . $precoAgendamento .  '</p>
+                    <p>Tipo: ' . $tipoDeAgendamento .'</p>
+                    <p>Profissional: ' . $profissionalName . '</p>
+                    <p> <strong> Solicitamos que acesse sua plataforma de agendamento para proceder com a confirmação ou cancelamento de seu compromisso. </strong></p>
+                    <p>Obrigado e até breve!</p>
+                    <p>Atenciosamente,</p>
+                    <p><strong>PSICOMIND</strong></p>
+                    ';
 
 
-                 //EnviarEmail($to, $from, $assunto, $mensagem)
+                    EnviarEmail($_SESSION['email'], "anabeatrizalmeida004@gmail.com", "PSICOMIND - AGENDAMENTO", $mensagemCliente);
 
-                 EnviarEmail($_SESSION['email'], "anabeatrizalmeida004@gmail.com", "PSICOMIND - AGENDAMENTO", $mensagem);
+                    EnviarEmail($profissionalEmail, "anabeatrizalmeida004@gmail.com", "PSICOMIND - NOVO AGENDAMENTO", $mensagemProfissional);
 
-                    header('location: minhaConsulta.php');
-                    exit; // Garante que o script PHP pare após o redirecionamento
+                        header('location: minhaConsulta.php');
+                        exit; // Garante que o script PHP pare após o redirecionamento
                 }else{
                     echo "<script>alert('Erro ao agendar consulta.')</script>";
                 }  
