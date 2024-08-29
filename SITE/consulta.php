@@ -22,15 +22,15 @@ $precoAgendamento = $tipoPreco['preco'] ?? 0;
 
 $prof = $conn->query("SELECT * FROM profissionais WHERE id = $profissional_id");
 $arrayProf = $prof->fetch_assoc();
-$profissionalName = $arrayProf['nome'];
+$profissionalName = $arrayProf['nome'] ?? 0;
 
 $hour = $conn->query("SELECT * FROM escala WHERE id = $escala_id");
 $arrayEscala = $hour->fetch_assoc();
-$horarioAgendamento = $arrayEscala['horario'];
+$horarioAgendamento = $arrayEscala['horario'] ?? 0;
 
 $tipo = $conn->query("SELECT * FROM tipo_agendamento WHERE id = $tipoAgendamento");
 $arrayTipo = $tipo->fetch_assoc();
-$tipoDeAgendamento = $arrayTipo['tipo_agendamento'];
+$tipoDeAgendamento = $arrayTipo['tipo_agendamento'] ?? 0;
 
 // -----------------------------------------------------------------------------------
 
@@ -97,7 +97,7 @@ if($_POST){
 
                  //EnviarEmail($to, $from, $assunto, $mensagem)
 
-                 EnviarEmail('cabralroger159@gmail.com', "anabeatrizalmeida004@gmail.com", "PSICOMIND - AGENDAMENTO", $mensagem);
+                 EnviarEmail($_SESSION['email'], "anabeatrizalmeida004@gmail.com", "PSICOMIND - AGENDAMENTO", $mensagem);
 
                     header('location: minhaConsulta.php');
                     exit; // Garante que o script PHP pare após o redirecionamento
@@ -128,6 +128,7 @@ if($_POST){
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    
     <title>PSICOMIND - Agendamento</title>
 </head>
 
@@ -146,7 +147,7 @@ if($_POST){
                         <div class="col-md-6 mb-4">
                             <label style="color: var(--cor-primaria);" for="tipo_agendamento">Tipo de
                                 Agendamento</label>
-                                <select id="tipo_agendamento" name="tipo_agendamento" class="form-select form-select-lg bg-light fs-6">
+                                <select id="tipo_agendamento" name="tipo_agendamento" class="form-select form-select-lg bg-light fs-6" required>
                                     <option selected disabled>Selecione o tipo de consulta</option>
                                     <?php 
                                     $agendamento = $conn->query("SELECT t.id, t.tipo_agendamento, p.preco FROM tipo_agendamento t JOIN preco_consulta p ON t.id = p.id");
@@ -160,7 +161,7 @@ if($_POST){
                         <div class="col-md-6 mb-4">
                             <label style="color: var(--cor-primaria);" for="profissional_id">Profissional</label>
                             <select name="profissional_id" id="profissional_id"
-                                class="form-select form-select-lg bg-light fs-6">
+                                class="form-select form-select-lg bg-light fs-6" required>
                                 <option selected disabled>Selecione o profissional</option>
                                 <?php while ($profissionalLista = $profissional->fetch_assoc()) { ?>
                                     <option value="<?php echo $profissionalLista['id']; ?>">
@@ -175,7 +176,7 @@ if($_POST){
 
                         <div class="col-md-6 mb-4">
                             <label style="color: var(--cor-primaria);" for="horarios">Horários</label>
-                            <select name="horario_id" id="horarios" class="form-select form-select-lg bg-light fs-6">
+                            <select name="horario_id" id="horarios" class="form-select form-select-lg bg-light fs-6" required>
                                 <option selected disabled>Selecione o Horário</option>
                                 <?php while ($horarioLista = $horarios->fetch_assoc()) { ?>
                                     <option value="<?php echo $horarioLista["id"] ?>"><?php echo $horarioLista['horario']; ?>

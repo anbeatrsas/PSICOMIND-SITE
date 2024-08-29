@@ -17,6 +17,7 @@
 <body>
  
     <?php include "menu.php" ?>
+    
  
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="row border rounded-5 p-4 bg-white shadow box-area">
@@ -31,7 +32,7 @@
                             <label style="color: var(--cor-primaria);" for="tipo_agendamento">Tipo de
                                 Agendamento</label>
                             <select id="tipo_agendamento" name="tipo_agendamento"
-                                class="form-select form-select-lg bg-light fs-6">
+                                class="form-select form-select-lg bg-light fs-6" >
                                 <option selected disabled>Selecione o tipo de consulta</option>
                                 <?php while ($tipoAgendamento = $agendamento->fetch_assoc()) { ?>
                                     <option value="<?php echo $tipoAgendamento['id']; ?>">

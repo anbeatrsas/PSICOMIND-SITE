@@ -81,27 +81,27 @@
                     <h1>Crie sua Conta</h1>
                     <p>Preencha os campos abaixo para se cadastrar.</p>
                 </div>
-                <form action="cadastro.php" method="POST">
+                <form action="cadastro.php" method="POST" id="form">
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <input type="text" id="nome" name="nome" class="form-control form-control-lg bg-light fs-6" placeholder="Nome Completo">
+                            <input type="text" id="nome" name="nome" required class="form-control form-control-lg bg-light fs-6" placeholder="Nome Completo">
                         </div>
                         <div class="col-md-4">
-                            <input type="email" id="email" name="email" class="form-control form-control-lg bg-light fs-6" placeholder="Email">
+                            <input type="email" id="email" name="email" required class="form-control form-control-lg bg-light fs-6" placeholder="Email">
                         </div>
                         <div class="col-md-4">
-                            <input type="password" id="senha" name="senha" class="form-control form-control-lg bg-light fs-6" placeholder="Senha">
+                            <input type="password" id="senha" name="senha" required class="form-control form-control-lg bg-light fs-6" placeholder="Senha">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <input type="text" id="cpf" name="cpf" class="form-control form-control-lg bg-light fs-6" placeholder="CPF">
+                            <input type="text" id="cpf" name="cpf" required class="form-control form-control-lg bg-light fs-6" placeholder="CPF">
                         </div>
                         <div class="col-md-4">
-                            <input type="date" id="data_nasc" name="data_nasc" class="form-control form-control-lg bg-light fs-6">
+                            <input type="date" id="data_nasc" required name="data_nasc" class="form-control form-control-lg bg-light fs-6">
                         </div>
                         <div class="col-md-4">
-                            <select id="genero_id" name="genero_id" class="form-select form-select-lg bg-light fs-6">
+                            <select id="genero_id" name="genero_id" required class="form-select form-select-lg bg-light fs-6">
                                 <option selected disabled>Selecione o Gênero</option>
                                 <?php while ($genero = $resultadoGeneros->fetch_assoc()) { ?>
                                     <option value="<?php echo $genero['id']; ?>"><?php echo $genero['genero']; ?></option>
@@ -111,40 +111,40 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <input type="text" id="telefone" name="telefone" class="form-control form-control-lg bg-light fs-6" placeholder="Telefone">
+                            <input type="text" id="telefone" name="telefone" required class="form-control form-control-lg bg-light fs-6" placeholder="Telefone">
                         </div>
                         <div class="col-md-4">
-                            <select id="tipo_telefone" name="tipo_telefone" class="form-select form-select-lg bg-light fs-6">
-                                <option selected disabled>Tipo de Telefone</option>
+                            <select id="tipo_telefone" name="tipo_telefone" required class="form-select form-select-lg bg-light fs-6">
+                                <option selected disabled >Tipo de Telefone</option>
                                 <?php while($tipoTelefone = $resultadoTelefone->fetch_assoc()){?>
                                     <option value="<?php echo $tipoTelefone['id']; ?>"><?php echo $tipoTelefone['tipo'];?></option>
                                 <?php }?>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <input type="text" id="cep" name="cep" class="form-control form-control-lg bg-light fs-6" placeholder="CEP">
+                            <input type="text" id="cep" name="cep" required class="form-control form-control-lg bg-light fs-6" placeholder="CEP">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <input type="text" id="rua" name="rua" class="form-control form-control-lg bg-light fs-6" placeholder="Rua">
+                            <input type="text" id="rua" name="rua" required class="form-control form-control-lg bg-light fs-6" placeholder="Rua">
                         </div>
                         <div class="col-md-4">
-                            <input type="text" id="numero" name="numero" class="form-control form-control-lg bg-light fs-6" placeholder="Número">
+                            <input type="text" id="numero" name="numero" required class="form-control form-control-lg bg-light fs-6" placeholder="Número">
                         </div>
                         <div class="col-md-4">
-                            <input type="text" id="bairro" name="bairro" class="form-control form-control-lg bg-light fs-6" placeholder="Bairro">
+                            <input type="text" id="bairro" name="bairro" required class="form-control form-control-lg bg-light fs-6" placeholder="Bairro">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <input type="text" id="cidade" name="cidade" class="form-control form-control-lg bg-light fs-6" placeholder="Cidade">
+                            <input type="text" id="cidade" name="cidade" required class="form-control form-control-lg bg-light fs-6" placeholder="Cidade">
                         </div>
                         <div class="col-md-4">
-                            <input type="text" id="uf" name="uf" class="form-control form-control-lg bg-light fs-6" placeholder="UF">
+                            <input type="text" id="uf" name="uf" required class="form-control form-control-lg bg-light fs-6" placeholder="UF">
                         </div>
                         <div class="col-md-4">
-                        <select id="tipo_endereco_id" name="tipo_endereco_id" class="form-select form-select-lg bg-light fs-6">
+                        <select id="tipo_endereco_id" name="tipo_endereco_id" required class="form-select form-select-lg bg-light fs-6">
                                 <option selected disabled>Tipo de Endereço</option>
                                 <?php while ($tipoEndereco = $resultadoTipoEndereco->fetch_assoc()) { ?>
                                     <option value="<?php echo $tipoEndereco['id']; ?>"><?php echo $tipoEndereco['nome']; ?></option>
