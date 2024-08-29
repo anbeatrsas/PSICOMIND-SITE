@@ -1,6 +1,7 @@
 <?php
 include "conn/conection.php";
 include "admin/acesso_com.php";
+include  'email/email.php';
 
 $profissional_id = $_POST['profissional_id'] ?? 0;
 $dia = $_POST['data_agendamento'] ?? 0;
@@ -14,6 +15,7 @@ $profissional = $conn->query("SELECT * FROM profissionais WHERE cargo_id = 3");
 
 $preco = $conn->query("SELECT * FROM preco_consulta WHERE id = $tipoAgendamento");
 $tipoPreco = $preco->fetch_assoc();
+$precoAgendamento = $tipoPreco['preco'] ?? 0;
 
 // Busca os dias disponíveis com base no profissional escolhido
 $diasDisponiveis = $conn->query("SELECT dia FROM escala WHERE disponivel = 1 and profissional_id = $profissional_id");
@@ -58,7 +60,26 @@ if($_POST){
                
                 $consultaInserir = $conn->query("INSERT INTO consultas VALUES (0, $agendamento_id, '', 1, 'Agendada')");
 
-                if($consultaInserir){
+                if($consultaInserir){  
+
+                $mensagem = '
+                <h1 style="color: #d9534f; text-align: center;">Confirmação de Agendamento</h1>
+                <p>Olá, '. $_SESSION['nome_cliente'] .'</p>
+                <p>Seu agendamento foi confirmado com as seguintes informações:</p>
+                <p>Horário: ' . $horario.  '<br>Data: ' . $dia .'</p>
+                <p>Preço: ' . $precoAgendamento .  '<br>Tipo: ' . $tipoAgendamento .'</p>
+                <p>Profissional: ' . $profissional_id . '</p>
+                <p>Aguardamos você no dia e horário agendado.</p>
+                <p>Obrigado e até breve!</p>
+                <p>Atenciosamente,</p>
+                <p><strong>PSICOMIND</strong></p>
+                ';
+
+
+                 //EnviarEmail($to, $from, $assunto, $mensagem)
+
+                 EnviarEmail('anabeatrizalmeida004@gmail.com', "anabeatrizalmeida004@gmail.com", "PSICOMIND - AGENDAMENTO", $mensagem);
+
                     header('location: minhaConsulta.php');
                     exit; // Garante que o script PHP pare após o redirecionamento
                 }else{

@@ -61,12 +61,13 @@ $consultas = $conn->query("SELECT * FROM vw_consulta_informacoes_cliente WHERE c
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Nome</th>
                         <th>Profissional</th>
                         <th>Tipo de Consulta</th>
                         <th>Data</th>
                         <th>Horário</th>
                         <th>Status</th>
+                        <th>Preço</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -75,10 +76,11 @@ $consultas = $conn->query("SELECT * FROM vw_consulta_informacoes_cliente WHERE c
                             <tr>
                                 <td><?php echo $consulta['nome_cliente']; ?></td>
                                 <td><?php echo $consulta['nome_profissional']; ?></td>
+                                <td><?php echo $consulta['tipo_agendamento']?></td>
                                 <td><?php echo $consulta['dia_escala']?></td>
                                 <td><?php echo $consulta['horario_escala']?></td>
                                 <td><?php echo $consulta['status_consulta']?></td>
-                                <td><?php echo $consulta['tipo_agendamento']?></td>
+                                
                                 <td><?php echo $consulta['preco']?></td>
                             </tr>
                         <?php } ?>

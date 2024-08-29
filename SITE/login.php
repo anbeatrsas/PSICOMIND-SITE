@@ -21,6 +21,7 @@
             $_SESSION['login_cliente'] = $email;
             $_SESSION['nome_cliente'] = $rowLogin['nome'];
             $_SESSION['cpf'] = $rowLogin['CPF'];
+            $_SESSION['email'] = $rowLogin['email'];
             $_SESSION['cliente_id'] = $rowLogin['id'];
             $_SESSION['nome_sessao']=session_name();
 
