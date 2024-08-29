@@ -29,7 +29,7 @@
         $tipo_endereco_id = $_POST['tipo_endereco_id'];
     
         // Insere o cliente no banco de dados
-        $inserindoCliente = $conn->query("INSERT INTO clientes (nome, email, senha, cpf, data_nasc, genero_id) VALUES ('$nome', '$email', '$senha', '$cpf', '$data_nasc', $genero_id)");
+        $inserindoCliente = $conn->query("INSERT INTO clientes (nome, email, senha, cpf, data_nasc, genero_id, ativo) VALUES ('$nome', '$email', '$senha', '$cpf', '$data_nasc', $genero_id,1)");
 
         // Inserindo User
         $inserindoUser = $conn->query("INSERT INTO usuarios VALUES (0, 4, '$nome', '$email', '$senha', 1)");
