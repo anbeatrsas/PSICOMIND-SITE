@@ -13,9 +13,26 @@ $horario = $_POST['horario'] ?? 0;
 $agendamento = $conn->query("SELECT * FROM tipo_agendamento");
 $profissional = $conn->query("SELECT * FROM profissionais WHERE cargo_id = 3");
 
+
+// pegando dados para EMAIL -----------------------------------------------------------
+
 $preco = $conn->query("SELECT * FROM preco_consulta WHERE id = $tipoAgendamento");
 $tipoPreco = $preco->fetch_assoc();
 $precoAgendamento = $tipoPreco['preco'] ?? 0;
+
+$prof = $conn->query("SELECT * FROM profissionais WHERE id = $profissional_id");
+$arrayProf = $prof->fetch_assoc();
+$profissionalName = $arrayProf['nome'];
+
+$hour = $conn->query("SELECT * FROM escala WHERE id = $escala_id");
+$arrayEscala = $hour->fetch_assoc();
+$horarioAgendamento = $arrayEscala['horario'];
+
+$tipo = $conn->query("SELECT * FROM tipo_agendamento WHERE id = $tipoAgendamento");
+$arrayTipo = $tipo->fetch_assoc();
+$tipoDeAgendamento = $arrayTipo['tipo_agendamento'];
+
+// -----------------------------------------------------------------------------------
 
 // Busca os dias disponíveis com base no profissional escolhido
 $diasDisponiveis = $conn->query("SELECT dia FROM escala WHERE disponivel = 1 and profissional_id = $profissional_id");
@@ -63,12 +80,14 @@ if($_POST){
                 if($consultaInserir){  
 
                 $mensagem = '
-                <h1 style="color: #d9534f; text-align: center;">Confirmação de Agendamento</h1>
+                <h1 style="color: #2789f8; text-align: center;">Confirmação de Agendamento</h1>
                 <p>Olá, '. $_SESSION['nome_cliente'] .'</p>
                 <p>Seu agendamento foi confirmado com as seguintes informações:</p>
-                <p>Horário: ' . $horario.  '<br>Data: ' . $dia .'</p>
-                <p>Preço: ' . $precoAgendamento .  '<br>Tipo: ' . $tipoAgendamento .'</p>
-                <p>Profissional: ' . $profissional_id . '</p>
+                <p>Horário: ' . $horarioAgendamento . '</p>
+                <p>Data: ' . $dia .'</p>
+                <p>Preço: ' . $precoAgendamento .  '</p>
+                <p>Tipo: ' . $tipoDeAgendamento .'</p>
+                <p>Profissional: ' . $profissionalName . '</p>
                 <p>Aguardamos você no dia e horário agendado.</p>
                 <p>Obrigado e até breve!</p>
                 <p>Atenciosamente,</p>
@@ -78,7 +97,7 @@ if($_POST){
 
                  //EnviarEmail($to, $from, $assunto, $mensagem)
 
-                 EnviarEmail('anabeatrizalmeida004@gmail.com', "anabeatrizalmeida004@gmail.com", "PSICOMIND - AGENDAMENTO", $mensagem);
+                 EnviarEmail('cabralroger159@gmail.com', "anabeatrizalmeida004@gmail.com", "PSICOMIND - AGENDAMENTO", $mensagem);
 
                     header('location: minhaConsulta.php');
                     exit; // Garante que o script PHP pare após o redirecionamento
