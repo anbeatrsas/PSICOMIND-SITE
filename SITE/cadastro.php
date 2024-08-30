@@ -1,15 +1,15 @@
-<?php 
+<?php
     include "conn/conection.php";
-
+ 
     // Consulta para obter os gêneros
     $resultadoGeneros = $conn->query("SELECT * FROM genero");
-
+ 
     // Consulta para obter tipos de telefone
     $resultadoTelefone = $conn->query("SELECT * FROM telefone_tipo");
-
+ 
     // Consulta para obter tipos de endereço
     $resultadoTipoEndereco = $conn->query("SELECT * FROM tipo_endereco");
-
+ 
     // Verifica se o formulário foi enviado
     if ($_POST) {
         $nome = $_POST['nome'];
@@ -27,24 +27,21 @@
         $cidade = $_POST['cidade'];
         $uf = $_POST['uf'];
         $tipo_endereco_id = $_POST['tipo_endereco_id'];
-    
+   
         // Insere o cliente no banco de dados
-        $inserindoCliente = $conn->query("INSERT INTO clientes (nome, email, senha, cpf, data_nasc, genero_id, ativo) VALUES ('$nome', '$email', '$senha', '$cpf', '$data_nasc', $genero_id,1)");
-
-        // Inserindo User
-        $inserindoUser = $conn->query("INSERT INTO usuarios VALUES (0, 4, '$nome', '$email', '$senha', 1)");
-    
+        $inserindoCliente = $conn->query("INSERT INTO clientes (nome, email, senha, cpf, data_nasc, genero_id) VALUES ('$nome', '$email', '$senha', '$cpf', '$data_nasc', $genero_id)");
+   
         if ($inserindoCliente) {
             // Recupera o último ID inserido
             $cliente_id = $conn->insert_id; // Usa insert_id para pegar o último ID inserido
-    
+   
             // Insere o telefone relacionado ao cliente
             $inserindoCelular = $conn->query("INSERT INTO telefone_cliente (numero, cliente_id, telefone_tipo_id) VALUES ('$telefone', $cliente_id, $tipo_telefone)");
-    
+   
             if ($inserindoCelular) {
                 // Insere o endereço relacionado ao cliente
                 $inserindoEndereco = $conn->query("INSERT INTO enderecos (cliente_id, cep, rua, numero, bairro, cidade, uf, tipo_endereco_id ) VALUES ($cliente_id, '$cep', '$rua', '$numero', '$bairro', '$cidade', '$uf', $tipo_endereco_id)");
-    
+   
                 if ($inserindoEndereco) {
                     echo "<script>alert('Cadastro realizado com sucesso.');</script>";
                     header('Location: login.php');
@@ -60,7 +57,7 @@
         }
     }
 ?>
-
+ 
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -71,12 +68,12 @@
     <link rel="stylesheet" href="css/cadastroStyle.css">
     <link rel="icon" href="images/IconSemNome.png" type="image/png">
     <title>PSICOMIND - CADASTRO</title>
-    
+   
 </head>
 <body>
-
+ 
     <?php include "menu.php"?>
-
+ 
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="row border rounded-5 p-4 bg-white shadow box-area">
             <div class="col-md-12 right-box">
@@ -165,7 +162,6 @@
             </div>
         </div>
     </div>
-
+ 
 </body>
 </html>
-
