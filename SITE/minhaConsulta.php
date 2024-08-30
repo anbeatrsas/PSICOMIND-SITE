@@ -1,12 +1,27 @@
 <?php
 include "conn/conection.php";
 include "admin/acesso_com.php";
+include  'email/email.php';
 
 // Obtendo o ID do cliente da sessão
 $cliente_id = $_SESSION['cliente_id'] ?? 0;
 
 // Buscando as consultas do usuário
 $consultas = $conn->query("SELECT * FROM vw_consulta_informacoes_cliente WHERE cliente_id = $cliente_id and status_consulta != 'Cancelada'");
+$consulta = $consultas->fetch_assoc();
+
+
+$nome = $consulta['nome_profissional'];
+$tipoDeAgendamento = $consulta['tipo_agendamento'];
+$dia = $consulta['dia_escala'];
+$horarioAgendamento = $consulta['horario_escala'];
+
+
+$prof = $conn->query("SELECT * FROM profissionais WHERE nome = '$nome'");
+$arrayProf = $prof->fetch_assoc();
+$profissionalName = $arrayProf['nome'] ?? 0;
+$profissionalEmail = $arrayProf['email'] ?? 0;
+
 
 // Função para cancelar consulta
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consulta_id'])) {
@@ -17,6 +32,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consulta_id'])) {
         $stmt->bind_param("i", $consulta_id);
         if ($stmt->execute()) {
             $message = "Consulta cancelada com sucesso!";
+
+            // enviando email de cancelamento
+
+            $mensagemProfissional = '
+                    <h1 style="color: #2789f8; text-align: center;">Cancelamento de Agendamento</h1>
+                    <p>Olá, '. $profissionalName .'</p>
+                    <p> <strong> Informamos que foi efetuado o cancelamento de agendamento com as seguintes informações: </strong></p>
+                    <p>Horário: ' . $horarioAgendamento . '</p>
+                    <p>Data: ' . $dia .'</p>
+                    <p>Tipo: ' . $tipoDeAgendamento .'</p>
+                    <p>Cliente: ' . $_SESSION['nome_cliente'] . '</p>
+                    <p>Atenciosamente,</p>
+                    <p><strong>PSICOMIND</strong></p>
+                    ';
+
+                    EnviarEmail($profissionalEmail, "anabeatrizalmeida004@gmail.com", "CANCELAMENTO DE AGENDAMENTO", $mensagemProfissional);
+
         } else {
             $message = "Erro ao cancelar a consulta.";
         }

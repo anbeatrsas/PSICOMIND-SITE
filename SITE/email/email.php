@@ -28,7 +28,7 @@
             $mail->Password = 'sznz htna krdw sscs';
             $mail->setFrom($from, $from);
             $mail->addAddress($to, $to);
-            $mail->addReplyTo('replyto@example.com', 'First Last');
+            $mail->addReplyTo('anabeatrizalmeida004@gmail.com', 'First Last');
  
             // Assunto e mensagem de email
             $mail->Subject = $assunto;
@@ -38,7 +38,7 @@
             if (!$mail->send()) {
                 echo 'Mailer Error: ' . $mail->ErrorInfo;
             } else {
-                echo 'Message sent!';
+                //echo 'Message sent!';
  
             }
  
