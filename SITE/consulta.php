@@ -103,7 +103,7 @@ if($_POST){
                     <p>Data: ' . $dia .'</p>
                     <p>Preço: R$ ' . $precoAgendamento .  '</p>
                     <p>Tipo: ' . $tipoDeAgendamento .'</p>
-                    <p>Profissional: ' . $profissionalName . '</p>
+                    <p>Cliente: ' . $_SESSION['nome_cliente'] . '</p>
                     <p> <strong> Solicitamos que acesse sua plataforma de agendamento para proceder com a confirmação ou cancelamento de seu compromisso. </strong></p>
                     <p>Obrigado e até breve!</p>
                     <p>Atenciosamente,</p>
