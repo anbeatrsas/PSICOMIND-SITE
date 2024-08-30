@@ -49,6 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['consulta_id'])) {
 
                     EnviarEmail($profissionalEmail, "anabeatrizalmeida004@gmail.com", "CANCELAMENTO DE AGENDAMENTO", $mensagemProfissional);
 
+                header('location: minhaConsulta.php');
+                exit;
+
         } else {
             $message = "Erro ao cancelar a consulta.";
         }
